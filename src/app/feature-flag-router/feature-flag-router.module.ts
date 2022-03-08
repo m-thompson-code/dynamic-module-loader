@@ -1,56 +1,26 @@
-// import { ModuleWithProviders, NgModule } from "@angular/core";
-// import { provideRoutes, Router, RouterModule, ROUTES, Routes } from "@angular/router";
-// import { of } from "rxjs";
-// import { FeatureFlagFactory } from "../services/feature-flag/feature-flag.model";
-// import { getRoutesFactory } from "../services/feature-flag/routes-factory";
+import { forwardRef, ModuleWithProviders, NgModule, Type } from "@angular/core";
+import { RouterModule, ROUTES, Routes } from "@angular/router";
+import { featureFlagRoutesFactory, FeatureFlagRoutesService } from "./feature-flag-routes-factory";
+import { FeatureFlagRoutesGetter } from "./feature-flag-routes-factory.model";
 
-// @NgModule({
-//     exports: [RouterModule],
-// })
-// export class FeatureFlagRouterModule {
-//     static forChild(routes?: Routes): ModuleWithProviders<FeatureFlagRouterModule> {
-//         return {
-//             ngModule: FeatureFlagRouterModule, 
-//             providers: [
-//                 provideRoutes(routes ?? []),
-//             ]
-//         };
-//     }
-// }
-
-// @NgModule({
-//     // imports: [RouterModule.forChild(ROUTES)],
-//     exports: [RouterModule],
-// })
-// export class FeatureFlagSpliterModule {
-//     constructor(private router: Router) {
-//         console.log("hello", router);
-//     }
-
-//     static forChild(routes?: Routes): ModuleWithProviders<FeatureFlagSpliterModule> {
-//         const hack = routes?.map(route => {
-//             const loadChildren = route.loadChildren;
-//             if (!loadChildren) {
-//                 return route;
-//             }
-
-//             return {
-//                 ...route,
-//                 path: '**',
-
-//                 loadChildren: () => Promise.resolve(FeatureFlagRouterModule.forChild([{
-//                     ...route,
-//                     path: '**',
-//                 }]).ngModule),
-//                 // loadChildren: () => loadChildren(),
-//             };
-//         }) ?? [];
-//         console.log(hack);
-//         return {
-//             ngModule: FeatureFlagSpliterModule, 
-//             providers: [
-//                 provideRoutes(hack)
-//             ]
-//         };
-//     }
-// }
+@NgModule({
+    exports: [RouterModule],
+})
+export class FeatureFlagRouterModule {
+    static forChild(routes: Routes, featureFlagRoutesGetter: Type<FeatureFlagRoutesGetter>): ModuleWithProviders<FeatureFlagRouterModule> {
+        return {
+            ngModule: FeatureFlagRouterModule,
+            providers: [
+                RouterModule,
+                { provide: FeatureFlagRoutesGetter, useExisting: forwardRef(() => featureFlagRoutesGetter) },
+                FeatureFlagRoutesService,
+                {
+                    provide: ROUTES,
+                    useFactory: featureFlagRoutesFactory(routes),
+                    multi: true,
+                    deps: [FeatureFlagRoutesService, FeatureFlagRoutesGetter]
+                }
+            ],
+        }
+    }
+}

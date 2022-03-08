@@ -1,13 +1,21 @@
 import { NgModule, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ARoutingModule } from './a-routing.module';
+import { RouterModule, Routes } from '@angular/router';
+import { AComponent } from './a.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: AComponent
+  }
+];
 
 @NgModule({
-  declarations: [],
+  declarations: [AComponent],
   imports: [
     CommonModule,
-    ARoutingModule,
-  ]
+    RouterModule.forChild(routes),
+  ],
 })
 export class AModule implements OnInit, OnDestroy {
   constructor() {

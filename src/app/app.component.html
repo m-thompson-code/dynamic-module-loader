@@ -6,9 +6,11 @@
 <a [routerLink]="['other', 'd', form.controls['id'].value]">D</a> | 
 <a [routerLink]="['root', 'e', form.controls['id'].value]">E</a> | 
 <a [routerLink]="['root', 'f', form.controls['id'].value]">F</a> | 
+<a [routerLink]="['moar', 'g', form.controls['id'].value]">G</a> | 
+<a [routerLink]="['moar', 'h', form.controls['id'].value]">H</a> | 
 
-<button (click)="setFeatureFlag('on')">Turn feature flag ON</button> 
-<button (click)="setFeatureFlag('off')">Turn feature flag OFF</button>
+<button (click)="setFeatureFlag(FeatureFlag.ON)">Turn feature flag ON</button> 
+<button (click)="setFeatureFlag(FeatureFlag.OFF)">Turn feature flag OFF</button>
 
 <form [formGroup]="form">
     <input formControlName="id" type="text" placeholder="id">

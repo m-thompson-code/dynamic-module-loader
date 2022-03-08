@@ -17,7 +17,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-  ]
+  ],
 })
 export class CModule implements OnInit, OnDestroy {
   constructor() {

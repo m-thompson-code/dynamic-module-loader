@@ -1,9 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-// import { FeatureFlagSpliterModule } from 'src/app/feature-flag-router/feature-flag-router.module';
-// import { FeatureFlagRouterModule } from 'src/app/feature-flag-router/feature-flag-router.module';
-// import { FeatureFlagService } from 'src/app/services/feature-flag/feature-flag.service';
 
 const routes: Routes = [
   {
@@ -17,12 +14,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [],
-  providers: [],
   imports: [
     CommonModule,
     RouterModule.forChild(routes)
-    // FeatureFlagSpliterModule.forChild(routes)
-  ]
+  ],
 })
 export class CDModule { }

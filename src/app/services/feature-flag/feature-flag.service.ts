@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Route, RouterStateSnapshot, Routes, UrlMatcher, UrlMatchResult, UrlSegment, UrlSegmentGroup, UrlTree } from '@angular/router';
-import { mapTo, Observable, of, Subject, tap } from 'rxjs';
-import { CanActivateService } from '../can-activate-guard/can-activate-guard.service';
+import { Route, Routes, UrlMatcher, UrlMatchResult, UrlSegment, UrlSegmentGroup } from '@angular/router';
+import { Subject } from 'rxjs';
 import { ConfigService } from '../config/config.service';
-import { FeatureFlagFactory } from './feature-flag.model';
+import { FeatureFlag, FeatureFlagFactory } from './feature-flag.model';
 
 export type GetFeatureFlag = () => boolean;
 
@@ -11,17 +10,13 @@ export type GetFeatureFlag = () => boolean;
   providedIn: 'root'
 })
 export class FeatureFlagService implements FeatureFlagFactory {
-  unsubscribe = new Subject<void>();
   constructor(private readonly configService: ConfigService) {
   }
 
   getFeatureRoutes(): Routes {
     return [
       {
-        matcher: this.getUrlMatcher(this.getFeatureAUrlMatcher, () => {
-          console.log(this.configService, this.configService.config);
-          return this.configService.config === 'on'}
-        ),
+        matcher: this.getUrlMatcher(this.getFeatureAUrlMatcher, () => this.configService.config === FeatureFlag.ON),
         loadChildren: () => import('../../routes/ab-routes/a-feature-flag/a-feature/a-feature.module').then(m => m.AFeatureModule),
       },
     ];

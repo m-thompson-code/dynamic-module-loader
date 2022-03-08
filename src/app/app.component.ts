@@ -1,37 +1,32 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { ConfigService } from './services/config/config.service';
+import { FeatureFlag } from './services/feature-flag/feature-flag.model';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnDestroy {
-  title = 'dynamic-module-loader';
+export class AppComponent implements OnInit, OnDestroy {
+  readonly form: FormGroup;
 
-  form: FormGroup;
+  private readonly unsubscribe$ = new Subject<void>();
 
-  unsubscribe$ = new Subject<void>();
+  readonly FeatureFlag = FeatureFlag;
 
   // Inject ConfigService asap to start fetching api request asap
-  constructor(private router: Router, private readonly configService: ConfigService) {
+  constructor(private readonly configService: ConfigService) {
     this.form = new FormGroup({
       id: new FormControl(),
     });
-
-    // this.configService.getConfig();
-    // this.configService.featureModule$.subscribe(console.log);
   }
   ngOnInit(): void {
-    // this.configService.getConfig();
   }
 
-  setFeatureFlag(value: string): void {
-    localStorage.setItem('featureFlag', value);
-    this.configService.setConfig();
+  setFeatureFlag(value: FeatureFlag): void {
+    this.configService.setConfig(value);
   }
 
   ngOnDestroy(): void {

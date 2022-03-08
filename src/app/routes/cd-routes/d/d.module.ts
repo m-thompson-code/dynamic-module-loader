@@ -6,7 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    component: DComponent,
+    component: DComponent
   }
 ];
 
@@ -17,7 +17,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-  ]
+  ],
 })
 export class DModule implements OnInit, OnDestroy {
   constructor() {

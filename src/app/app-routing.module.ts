@@ -19,14 +19,13 @@ const routes: Routes = [
     loadChildren: () => import('./routes/ef-routes/f/f.module').then(m => m.FModule),
   },
   {
-    path: '',
-    redirectTo: '',
-    pathMatch: 'full'
-  }
+    path: 'moar',
+    loadChildren: () => import('./routes/gh-routes/gh.module').then(m => m.GHModule),
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

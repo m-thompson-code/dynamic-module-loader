@@ -1,12 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AFeatureRoutingModule } from './a-feature-routing.module';
+import { RouterModule, Routes } from '@angular/router';
+import { AFeatureComponent } from './a-feature.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: AFeatureComponent
+  }
+];
 
 @NgModule({
-  declarations: [],
+  declarations: [AFeatureComponent],
   imports: [
     CommonModule,
-    AFeatureRoutingModule
-  ]
+    RouterModule.forChild(routes)
+  ],
 })
 export class AFeatureModule { }
