@@ -40,7 +40,6 @@ class SomeService implements FeatureFlagRoutesGetter {
   declarations: [],
   imports: [
     CommonModule,
-    // RouterModule.forChild(routes)
     FeatureFlagRouterModule.forChild(routes, SomeService)
   ],
 })

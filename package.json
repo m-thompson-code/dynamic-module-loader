@@ -6,6 +6,7 @@
     "start": "ng serve -o",
     "build": "ng build",
     "deploy": "ng deploy --base-href=/dynamic-module-loader/",
+    "publish": "npm run build && npm run deploy",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
