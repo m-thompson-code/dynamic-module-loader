@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-e',
   templateUrl: './e.component.html',
   styleUrls: ['./e.component.scss']
 })
-export class EComponent implements OnInit {
+export class EComponent {
+  readonly id$: Observable<string>;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(private readonly route: ActivatedRoute) {
+    this.id$ = this.route.params.pipe(map(params => params['id']));
   }
-
 }

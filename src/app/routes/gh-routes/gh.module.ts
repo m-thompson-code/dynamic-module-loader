@@ -1,11 +1,11 @@
 import { Injectable, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FeatureFlagRoute, FeatureFlagRoutesGetter } from '../../feature-flag-router/feature-flag-routes-factory.model';
-import { RouterModule, Routes } from '@angular/router';
-import { FeatureFlagRouterModule } from '../../feature-flag-router/feature-flag-router.module';
-import { ConfigService } from '../../services/config/config.service';
 import { map } from 'rxjs';
-import { FeatureFlag } from '../../services/feature-flag/feature-flag.model';
+import { Routes } from '@angular/router';
+import { ConfigService } from '../../services/config/config.service';
+import { FeatureFlag } from '../../services/config/config.model';
+import { FeatureFlagRoute, FeatureFlagRoutesGetter } from '../../feature-flag-router/feature-flag-routes-factory.model';
+import { FeatureFlagRouterModule } from '../../feature-flag-router/feature-flag-router.module';
 
 const routes: Routes = [
   {
@@ -21,14 +21,14 @@ const routes: Routes = [
 @Injectable({
   providedIn: 'root',
 })
-class SomeService implements FeatureFlagRoutesGetter {
+class SomeFeatureFlagRoutesGetter implements FeatureFlagRoutesGetter {
   constructor(private readonly configService: ConfigService) {}
 
   getFeatureRoutes(): FeatureFlagRoute[] {
     return [
       {
         path: 'g/:id',
-        getFeatureFlag$: this.configService.config$.pipe(map((config) => config === FeatureFlag.ON)),
+        getFeatureFlag$: this.configService.configG$.pipe(map((config) => config === FeatureFlag.ON)),
         loadChildren: () => import('./g/g.module').then(m => m.GModule),
         loadFeatureChildren: () => import('./g-feature/g-feature.module').then(m => m.GFeatureModule),
       },
@@ -40,7 +40,7 @@ class SomeService implements FeatureFlagRoutesGetter {
   declarations: [],
   imports: [
     CommonModule,
-    FeatureFlagRouterModule.forChild(routes, SomeService)
+    FeatureFlagRouterModule.forChild(routes, SomeFeatureFlagRoutesGetter)
   ],
 })
 export class GHModule {}

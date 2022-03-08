@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { ConfigService } from '../../../services/config/config.service';
+import { ActivatedRoute } from '@angular/router';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-b',
@@ -8,7 +8,9 @@ import { ConfigService } from '../../../services/config/config.service';
   styleUrls: ['./b.component.scss']
 })
 export class BComponent {
+  readonly id$: Observable<string>;
 
-  constructor() {
+  constructor(private readonly route: ActivatedRoute) {
+    this.id$ = this.route.params.pipe(map(params => params['id']));
   }
 }

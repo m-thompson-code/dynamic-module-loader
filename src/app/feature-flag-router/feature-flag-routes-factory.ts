@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { LoadChildrenCallback, Route, Routes, UrlSegment, UrlSegmentGroup } from '@angular/router';
 import { mergeMap, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { defaultUrlMatcher } from './angular-utils/default-url-matcher';
@@ -11,8 +11,6 @@ import { wrapIntoObservable } from './angular-utils/wrap-into-observable';
 
 export const featureFlagRoutesFactory: FeatureFlagRoutesFactory = 
     (routes: Routes) => (featureFlagRoutesService: FeatureFlagRoutesService) => featureFlagRoutesService.getFeatureFlagRoutes(routes);
-    
-
 
 @Injectable()
 export class FeatureFlagRoutesService {
@@ -80,7 +78,6 @@ export class FeatureFlagRoutesService {
                 ...featureFlagRoute,
                 loadChildren: firstLoadChildren,
                 matcher: (segments: UrlSegment[], group: UrlSegmentGroup, route: Route) => {
-                    console.log('first matcher', segments, group, route);
 
                     if (getFeatureFlag() !== getRoutedFeatureFlag()) {
                         return null;
@@ -94,8 +91,6 @@ export class FeatureFlagRoutesService {
                 ...featureFlagRoute,
                 loadChildren: secondLoadChildren,
                 matcher: (segments: UrlSegment[], group: UrlSegmentGroup, route: Route) => {
-                    console.log('second matcher', segments, group, route);
-              
                     const previousMatcher = featureFlagRoute.matcher ?? defaultUrlMatcher;
                     return previousMatcher(segments, group, route);
                   }
