@@ -1,4 +1,4 @@
-import { FeatureFlagRoutesFactoryService } from '../services/feature-flag-routes-factory.service/feature-flag-routes-factory.service';
+import { FeatureFlagRoutesFactoryService } from '../services/feature-flag-routes-factory/feature-flag-routes-factory.service';
 
 import {
     FeatureFlagRoutes,

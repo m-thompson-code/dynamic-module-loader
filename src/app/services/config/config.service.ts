@@ -32,7 +32,7 @@ export class ConfigService {
   getConfigA(): Observable<FeatureFlag> {
     return merge(
       this.httpClient.get(`https://jsonplaceholder.typicode.com/todos/1?feature_flag=${DemoRoute.A}`).pipe(
-        delay(3000),
+        delay(1000),
         map(() => this.getMockConfigValue(DemoRoute.A)),
         shareReplay(1),
       ),
@@ -45,7 +45,7 @@ export class ConfigService {
   getConfigG(): Observable<FeatureFlag> {
     return merge(
       this.httpClient.get(`https://jsonplaceholder.typicode.com/todos/1?feature_flag=${DemoRoute.G}`).pipe(
-        delay(3000),
+        delay(1000),
         map(() => this.getMockConfigValue(DemoRoute.G)),
         shareReplay(1),
       ),

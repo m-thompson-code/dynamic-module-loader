@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
+import { Injectable, ɵisObservable as isObservable, ɵisPromise as isPromise } from "@angular/core";
 import { LoadChildrenCallback, Route, Routes, UrlMatcher, UrlSegment, UrlSegmentGroup } from "@angular/router";
 import { mergeMap, Observable, Subject, takeUntil, tap } from "rxjs";
 import { defaultUrlMatcher } from "../../angular-utils/default-url-matcher";
 import { wrapIntoObservable } from "../../angular-utils/wrap-into-observable";
 import { FeatureFlagRoute, FeatureFlagRoutes } from "../../factories/feature-flag-routes-factory.model";
-import { FeatureFlagRoutesService } from "../../feature-flag-routes.service";
+import { FeatureFlagRoutesService } from "../feature-flag-routes/feature-flag-routes.service";
 
 @Injectable()
 export class FeatureFlagRoutesFactoryService {
@@ -13,24 +13,24 @@ export class FeatureFlagRoutesFactoryService {
     constructor(private readonly featureFlagRoutesService: FeatureFlagRoutesService) {}
 
     getLoadChildrens(
-        getFeatureFlag$: Observable<boolean>,
+        featureFlag$: Observable<boolean>,
         loadChildren: LoadChildrenCallback,
-        loadFeatureChildren: LoadChildrenCallback,
+        alternativeFeatureChildren: LoadChildrenCallback,
     ): [LoadChildrenCallback, LoadChildrenCallback] {
         return [
-            () => getFeatureFlag$.pipe(
+            () => featureFlag$.pipe(
                 mergeMap((featureFlag) => {
                     if (featureFlag) {
-                        return wrapIntoObservable(loadFeatureChildren());
+                        return wrapIntoObservable(alternativeFeatureChildren());
                     }
                         
                     return wrapIntoObservable(loadChildren());
                 })
             ),
-            () => getFeatureFlag$.pipe(
+            () => featureFlag$.pipe(
                 mergeMap((featureFlag) => {
                     if (!featureFlag) {
-                        return wrapIntoObservable(loadFeatureChildren());
+                        return wrapIntoObservable(alternativeFeatureChildren());
                     }
                         
                     return wrapIntoObservable(loadChildren());
@@ -58,25 +58,35 @@ export class FeatureFlagRoutesFactoryService {
         featureFlagRoute: FeatureFlagRoute
     ): [Route, Route] {
         const { loadChildren, alternativeLoadChildren, featureFlag } = featureFlagRoute;
-        const featureFlag$ = wrapIntoObservable(featureFlag);
+        const featureFlag$ = wrapIntoObservable(featureFlag());
 
-        let urlMatcherFeatureFlag = false;
-        let loadChildrenFeatureFlag = false;
+        let currentFeatureFlag: boolean | undefined;
+        let initalFeatureFlag: boolean | undefined;
 
         featureFlag$.pipe(
-            tap(value => urlMatcherFeatureFlag = value),
+            tap(value => {
+                if (typeof initalFeatureFlag === 'undefined') {
+                    initalFeatureFlag = value;
+                }
+
+                currentFeatureFlag = value;
+            }),
             takeUntil(this.unsubscribe$),
         ).subscribe();
 
-        const loadChildrenFeatureFlag$ = featureFlag$.pipe(
-            tap(value => loadChildrenFeatureFlag = value),
-        );
+        const featureFlagLatestValuesMatchInitalValue = () => {
+            const featureFlagValue = featureFlag();
 
-        const featureFlagLatestValuesMatch = () => urlMatcherFeatureFlag === loadChildrenFeatureFlag;
+            if (typeof featureFlagValue === 'boolean') {
+                return featureFlagValue === initalFeatureFlag;
+            }
 
-        const [ firstLoadChildren, secondLoadChildren ] = this.getLoadChildrens(loadChildrenFeatureFlag$, loadChildren, alternativeLoadChildren);
-        const [ firstUrlMatcher, secondUrlMatcher ] = this.getUrlMatchers(featureFlagLatestValuesMatch, featureFlagRoute.matcher);
+            return currentFeatureFlag === initalFeatureFlag
+        };
 
+        const [ firstLoadChildren, secondLoadChildren ] = this.getLoadChildrens(featureFlag$, loadChildren, alternativeLoadChildren);
+        const [ firstUrlMatcher, secondUrlMatcher ] = this.getUrlMatchers(featureFlagLatestValuesMatchInitalValue, featureFlagRoute.matcher);
+            console.log(featureFlagRoute);
         return [
             {
                 ...featureFlagRoute,

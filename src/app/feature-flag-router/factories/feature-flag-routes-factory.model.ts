@@ -1,7 +1,7 @@
 import { Route, Routes } from "@angular/router";
 import { Observable } from "rxjs";
 
-import { FeatureFlagRoutesFactoryService } from "../services/feature-flag-routes-factory.service/feature-flag-routes-factory.service";
+import { FeatureFlagRoutesFactoryService } from "../services/feature-flag-routes-factory/feature-flag-routes-factory.service";
 
 /**
  * `FeatureFlagRoute` extends `Route`
@@ -15,6 +15,7 @@ import { FeatureFlagRoutesFactoryService } from "../services/feature-flag-routes
  * and if `featureFlag`'s latest value is `true`, `alternativeLoadChildren` is used instead.
  */
 export interface FeatureFlagRoute extends Route {
+  featureFlagPath?: string;// TODO:
   /**
    * An object specifying lazy-loaded child routes.
    * 
@@ -36,7 +37,7 @@ export interface FeatureFlagRoute extends Route {
    * If `featureFlag`'s latest value is `false`, `loadChildren` is used,
    * and if `featureFlag`'s latest value is `true`, `alternativeLoadChildren` is used instead.
    */
-  featureFlag: boolean | Observable<boolean> | Promise<boolean>;
+  featureFlag: () => boolean | Observable<boolean> | Promise<boolean>;
 }
 
 export type FeatureFlagRoutes = (FeatureFlagRoute | Route & {

@@ -1,4 +1,4 @@
-import { FeatureFlagRoutes } from "./factories/feature-flag-routes-factory.model";
+import { FeatureFlagRoutes } from "../../factories/feature-flag-routes-factory.model";
 
 /**
  * Service with method `getFeatureRoutes`
@@ -16,4 +16,10 @@ import { FeatureFlagRoutes } from "./factories/feature-flag-routes-factory.model
      * This means that previous `ROUTES` may be overridden by the `ROUTES` returned by this method
      */
     abstract getFeatureRoutes(): FeatureFlagRoutes;
+}
+
+export class DefaultFeatureFlagRoutesService implements FeatureFlagRoutesService {
+    getFeatureRoutes(): FeatureFlagRoutes {
+        return [];
+    }
 }

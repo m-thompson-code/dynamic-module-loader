@@ -1,12 +1,12 @@
 import { Injectable, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { map } from 'rxjs';
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { ConfigService } from '../../services/config/config.service';
 import { FeatureFlag } from '../../services/config/config.model';
-import { FeatureFlagRoute } from '../../feature-flag-router/factories/feature-flag-routes-factory.model';
+import { FeatureFlagRoutes } from '../../feature-flag-router/factories/feature-flag-routes-factory.model';
 import { FeatureFlagRouterModule } from '../../feature-flag-router/feature-flag-router.module';
-import { FeatureFlagRoutesService } from '../../feature-flag-router/feature-flag-routes.service';
+import { FeatureFlagRoutesService } from '../../feature-flag-router/services/feature-flag-routes/feature-flag-routes.service';
 
 const routes: Routes = [
   {
@@ -23,17 +23,14 @@ const routes: Routes = [
   providedIn: 'root',
 })
 class SomeFeatureFlagRoutesGetter implements FeatureFlagRoutesService {
-  featureFlagRoute: FeatureFlagRoute[] = this.getFeatureRoutes();
-
   constructor(private readonly configService: ConfigService) {}
 
-  getFeatureRoutes(): FeatureFlagRoute[] {
+  getFeatureRoutes(): FeatureFlagRoutes {
     return [
       {
         path: 'g/:id',
-        featureFlag: this.configService.configG$.pipe(map((config) => config === FeatureFlag.ON)),
+        featureFlag: () => this.configService.configG$.pipe(map((config) => config === FeatureFlag.ON)),
         loadChildren: () => import('./g/g.module').then(m => m.GModule),
-        // alternative route (sp?) <adj>LoadChildren
         alternativeLoadChildren: () => import('./g-feature/g-feature.module').then(m => m.GFeatureModule),
       },
     ];
@@ -44,7 +41,8 @@ class SomeFeatureFlagRoutesGetter implements FeatureFlagRoutesService {
   declarations: [],
   imports: [
     CommonModule,
-    FeatureFlagRouterModule.forChild(routes, SomeFeatureFlagRoutesGetter)
+    FeatureFlagRouterModule.forChild(routes, SomeFeatureFlagRoutesGetter),
+    RouterModule.forChild(routes)
   ],
 })
 export class GHModule {}

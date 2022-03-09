@@ -10,7 +10,8 @@ import { Route, UrlMatchResult, UrlSegment, UrlSegmentGroup } from "@angular/rou
  */
 export function defaultUrlMatcher(
     segments: UrlSegment[], segmentGroup: UrlSegmentGroup, route: Route): UrlMatchResult|null {
-  const parts = SplitRoutePath(route);//route.path!.split('/');
+      console.log(segments, segmentGroup, route);
+  const parts = splitRoutePath(route);//route.path!.split('/');
 
   if (parts.length > segments.length) {
     // The actual URL is shorter than the config, no match
@@ -46,7 +47,7 @@ export function defaultUrlMatcher(
  * But to use `defaultUrlMatcher`, there must be a path. To avoid issues when path is not defined,
  * defaults to empty array if path is not defined (treated as if path is empty string)
  */
-export function SplitRoutePath(route: Route): string[] {
+export function splitRoutePath(route: Route): string[] {
   try {
     // This is the original way of splitting the route path in the Angular source code
     return route.path!.split('/');
