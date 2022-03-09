@@ -1,6 +1,9 @@
 import { Routes } from '@angular/router';
 import { FeatureFlagFactory, GetRoutesFactory } from './feature-flag.model';
 
+/**
+ * @deprecated - Use FeatureFlagRouterModule instead
+ */
 export const getRoutesFactory: GetRoutesFactory =
   (routes: Routes) =>
   (featureFlagFactory: FeatureFlagFactory): Routes => {

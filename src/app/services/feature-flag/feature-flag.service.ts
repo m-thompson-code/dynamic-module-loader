@@ -5,8 +5,6 @@ import { ConfigService } from '../config/config.service';
 import { FeatureFlag } from '../config/config.model';
 import { FeatureFlagFactory } from './feature-flag.model';
 
-export type GetFeatureFlag = () => boolean;
-
 /**
  * @deprecated - Use FeatureFlagRouterModule instead
  */
@@ -31,6 +29,9 @@ export class FeatureFlagService implements FeatureFlagFactory {
     ];
   }
 
+  /**
+   * @deprecated - Use FeatureFlagRouterModule instead
+   */
   getUrlMatcher(): UrlMatcher {
     return (segments: UrlSegment[], group: UrlSegmentGroup, route: Route) => {
       if (this.configService.configA !== FeatureFlag.ON) {

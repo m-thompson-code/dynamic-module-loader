@@ -1,8 +1,13 @@
 import { Route, UrlMatchResult, UrlSegment, UrlSegmentGroup } from "@angular/router";
 
-// Matches the route configuration (`route`) against the actual URL (`segments`).
-// source: https://github.com/angular/angular/blob/master/packages/router/src/shared.ts
-// https://github.com/angular/angular/issues/35928
+/**
+ * `defaultUrlMatcher` from [`angular/packages/router/src/shared.ts`](https://github.com/angular/angular/blob/master/packages/router/src/shared.ts)
+ * Since angular doesn't export this function, here is a copy of it using version 13.2.x
+ * 
+ * This is a known request since this can be useful for extended matcher's default behavior: [github](https://github.com/angular/angular/issues/35928)
+ * 
+ * Matches the route configuration (`route`) against the actual URL (`segments`).
+ */
 export function defaultUrlMatcher(
     segments: UrlSegment[], segmentGroup: UrlSegmentGroup, route: Route): UrlMatchResult|null {
   const parts = SplitRoutePath(route);//route.path!.split('/');
@@ -36,7 +41,12 @@ export function defaultUrlMatcher(
   return {consumed: segments.slice(0, parts.length), posParams};
 }
 
-function SplitRoutePath(route: Route): string[] {
+/**
+ * Current behavior for Angular is that they don't allow for path and matcher on `Route`
+ * But to use `defaultUrlMatcher`, there must be a path. To avoid issues when path is not defined,
+ * defaults to empty array if path is not defined (treated as if path is empty string)
+ */
+export function SplitRoutePath(route: Route): string[] {
   try {
     // This is the original way of splitting the route path in the Angular source code
     return route.path!.split('/');
@@ -44,6 +54,6 @@ function SplitRoutePath(route: Route): string[] {
     // Since we want to also handle if routes only have a matcher while still using the default matcher,
     // we need to avoid runtime error if path is not defined
     // Return empty array instead
-    return route?.path?.split('/') ?? [];
+    return route.path?.split('/') ?? [];
   }
 }

@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { CanActivateService } from '../../guards/can-activate-guard/can-activate-guard.service';
+import { CanActivateGuard } from '../../guards/can-activate-guard/can-activate.guard';
 
 const routes: Routes = [
   {
     path: 'a/:id',
     loadChildren: () => import('./a-feature-flag/a-feature-flag.module').then(m => m.AFeatureFlagModule),
     // Required to load config before attempting to route to a/a-feature
-    canActivate: [CanActivateService],
+    canActivate: [CanActivateGuard],
     // Required to load config before attempting to route to a/a-feature
-    canLoad: [CanActivateService],
+    canLoad: [CanActivateGuard],
   },
   {
     path: 'b/:id',

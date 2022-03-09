@@ -6,27 +6,51 @@ import { DemoRoute } from './config.model';
 
 @Injectable({ providedIn: 'root'})
 export class ConfigService {
-  override$ = new Subject<FeatureFlag>();
-  configA$: Observable<FeatureFlag> = this.getConfig(DemoRoute.A);
-  configG$: Observable<FeatureFlag> = this.getConfig(DemoRoute.G);
+  /**
+   * @deprecated - Legacy code for developing FeatureFlagRouterModule
+   */
+  overrideA$ = new Subject<FeatureFlag>();
+  /**
+   * @deprecated - Legacy code for developing FeatureFlagRouterModule
+   */
   configA: FeatureFlag = FeatureFlag.OFF;
+  /**
+   * @deprecated - Legacy code for developing FeatureFlagRouterModule
+   */
+  configA$: Observable<FeatureFlag> = this.getConfigA();
+
+  overrideG$ = new Subject<FeatureFlag>();
+  
+  configG$: Observable<FeatureFlag> = this.getConfigG();
 
   constructor(private readonly httpClient: HttpClient) {
   }
 
-  getConfig(route: DemoRoute): Observable<FeatureFlag> {
+  /**
+   * @deprecated - Legacy code for developing FeatureFlagRouterModule
+   */
+  getConfigA(): Observable<FeatureFlag> {
     return merge(
-      this.httpClient.get(`https://jsonplaceholder.typicode.com/todos/1?feature_flag=${route}`).pipe(
+      this.httpClient.get(`https://jsonplaceholder.typicode.com/todos/1?feature_flag=${DemoRoute.A}`).pipe(
         delay(3000),
-        map(() => this.getMockConfigValue(route)),
+        map(() => this.getMockConfigValue(DemoRoute.A)),
         shareReplay(1),
       ),
-      this.override$,
+      this.overrideA$,
     ).pipe(tap(config => {
-      if (route === DemoRoute.A) {
-        this.configA = config;
-      }
+      this.configA = config;
     }))
+  }
+
+  getConfigG(): Observable<FeatureFlag> {
+    return merge(
+      this.httpClient.get(`https://jsonplaceholder.typicode.com/todos/1?feature_flag=${DemoRoute.G}`).pipe(
+        delay(3000),
+        map(() => this.getMockConfigValue(DemoRoute.G)),
+        shareReplay(1),
+      ),
+      this.overrideG$,
+    );
   }
 
   getLocalStorageKey(route: DemoRoute): string {
@@ -38,9 +62,10 @@ export class ConfigService {
 
     if (route === DemoRoute.A) {
       this.configA = featureFlag;
+      this.overrideA$.next(featureFlag);
+    } else {
+      this.overrideG$.next(featureFlag);
     }
-
-    this.override$.next(featureFlag);
   }
 
   getMockConfigValue(route: DemoRoute): FeatureFlag {

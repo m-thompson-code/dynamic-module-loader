@@ -4,8 +4,9 @@ import { map } from 'rxjs';
 import { Routes } from '@angular/router';
 import { ConfigService } from '../../services/config/config.service';
 import { FeatureFlag } from '../../services/config/config.model';
-import { FeatureFlagRoute, FeatureFlagRoutesGetter } from '../../feature-flag-router/feature-flag-routes-factory.model';
+import { FeatureFlagRoute } from '../../feature-flag-router/factories/feature-flag-routes-factory.model';
 import { FeatureFlagRouterModule } from '../../feature-flag-router/feature-flag-router.module';
+import { FeatureFlagRoutesService } from '../../feature-flag-router/feature-flag-routes.service';
 
 const routes: Routes = [
   {
@@ -21,16 +22,19 @@ const routes: Routes = [
 @Injectable({
   providedIn: 'root',
 })
-class SomeFeatureFlagRoutesGetter implements FeatureFlagRoutesGetter {
+class SomeFeatureFlagRoutesGetter implements FeatureFlagRoutesService {
+  featureFlagRoute: FeatureFlagRoute[] = this.getFeatureRoutes();
+
   constructor(private readonly configService: ConfigService) {}
 
   getFeatureRoutes(): FeatureFlagRoute[] {
     return [
       {
         path: 'g/:id',
-        getFeatureFlag$: this.configService.configG$.pipe(map((config) => config === FeatureFlag.ON)),
+        featureFlag: this.configService.configG$.pipe(map((config) => config === FeatureFlag.ON)),
         loadChildren: () => import('./g/g.module').then(m => m.GModule),
-        loadFeatureChildren: () => import('./g-feature/g-feature.module').then(m => m.GFeatureModule),
+        // alternative route (sp?) <adj>LoadChildren
+        alternativeLoadChildren: () => import('./g-feature/g-feature.module').then(m => m.GFeatureModule),
       },
     ];
   }
