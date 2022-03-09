@@ -4,8 +4,8 @@ import { EComponent } from './e.component';
 import { FeatureFlagRouterModule } from '../../../feature-flag-router/feature-flag-router.module';
 import { FeatureFlagRoutes } from '../../../feature-flag-router/factories/feature-flag-routes-factory.model';
 
-let toggle = false;
-(window as any).test = () => { toggle = !toggle; return toggle };
+
+(window as any).test = () => { (window as any).featureFlag = !(window as any).featureFlag };
 
 const routes: FeatureFlagRoutes = [
   {
@@ -15,9 +15,9 @@ const routes: FeatureFlagRoutes = [
 
   {
     path: 'feature',
-    featureFlag: () => toggle,
+    featureFlag: () => !!(window as any).featureFlag,
     loadChildren: () => import('../../not-found/not-found.module').then(m => m.NotFoundModule),
-    alternativeLoadChildren: () => import('../e-feature/e-feature.module').then(m => m.EFeatureModule),
+    alternativeLoadChildren: () => import('./e-feature/e-feature.module').then(m => m.EFeatureModule),
   },
 ];
 

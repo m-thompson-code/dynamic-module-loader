@@ -22,6 +22,10 @@ const routes: Routes = [
     path: 'moar',
     loadChildren: () => import('./routes/gh-routes/gh.module').then(m => m.GHModule),
   },
+  {
+    path: 'even-moar',
+    loadChildren: () => import('./routes/ij-routes/ij.module').then(m => m.IJModule),
+  },
 ];
 
 @NgModule({
