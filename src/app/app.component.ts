@@ -1,8 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { DemoRoute, FeatureFlag } from './services/config/config.model';
-import { ConfigService } from './services/config/config.service';
+import { DemoRoute, FeatureFlag } from './services/feature-flag/feature-flag.model';
+import { FeatureFlagService } from './services/feature-flag/feature-flag.service';
 
 @Component({
   selector: 'app-root',
@@ -17,8 +17,8 @@ export class AppComponent implements OnDestroy {
   readonly FeatureFlag = FeatureFlag;
   readonly DemoRoute = DemoRoute;
 
-  // Inject ConfigService asap to start fetching api request asap
-  constructor(private readonly configService: ConfigService, private readonly fb: FormBuilder) {
+  // Inject FeatureFlagService to start fetching api request asap
+  constructor(private readonly configService: FeatureFlagService, private readonly fb: FormBuilder) {
     this.form = this.fb.group({
       id: [],
     });

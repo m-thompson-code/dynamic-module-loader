@@ -1,4 +1,4 @@
-import { DemoRoute, FeatureFlag } from "../services/config/config.model";
+import { DemoRoute, FeatureFlag } from "../services/feature-flag/feature-flag.model";
 
 export const getFeatureFlagKey = (route: DemoRoute): `feature-flag__${DemoRoute}` => {
     return `feature-flag__${route}`;

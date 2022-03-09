@@ -29,7 +29,7 @@ export class FeatureFlagRoutesFactoryService {
             mergeMap((value) => {
                 if (shouldLoadAlternative !== featureFlagMatchesdInitalValue()) {
                     if (isDevMode()) {
-                        console.error("Tracking feature flag value is unstable. Navigation can't predict which module to load. Falling back to `loadChildren` only and avoiding alternative module.");
+                        console.error("Unable to safely use `alternativeLoadChildren`. Feature flag value is changing to rapidly during navigation to predict which initial `NgModule` to load. Falling back to `loadChildren` only and avoiding alternative module.");
                     }
 
                     alternativeModuleIsUnsafe = true;
@@ -77,23 +77,31 @@ export class FeatureFlagRoutesFactoryService {
         featureFlagRoute: FeatureFlagRoute
     ): [Route, Route] {
         const { loadChildren, alternativeLoadChildren, featureFlag } = featureFlagRoute;
-        const featureFlagValue = featureFlag();
+        const initialFeatureFlagReturnValue = featureFlag();
 
-        let initalFeatureFlag: boolean | null = typeof featureFlagValue === 'boolean' ? featureFlagValue : null;
-        let currentFeatureFlag: boolean | null = initalFeatureFlag;
+        let initialFeatureFlag: boolean | null = typeof initialFeatureFlagReturnValue === 'boolean' ? initialFeatureFlagReturnValue : null;
+        let currentFeatureFlag: boolean | null = initialFeatureFlag;
         
-        const featureFlag$: Observable<boolean> = wrapIntoObservable(featureFlagValue);
+        const featureFlag$: Observable<boolean> = wrapIntoObservable(initialFeatureFlagReturnValue);
 
-        featureFlag$.pipe(
-            takeUntil(this.unsubscribe$),
-        ).subscribe(value => {
-            initalFeatureFlag ??= value;
-            currentFeatureFlag = value;
-            console.log(initalFeatureFlag, currentFeatureFlag);
-        });
+        if (typeof initialFeatureFlagReturnValue !== 'boolean') {
+            featureFlag$.pipe(
+                takeUntil(this.unsubscribe$),
+            ).subscribe(value => {
+                initialFeatureFlag ??= value;
+                currentFeatureFlag = value;
+                console.log(initialFeatureFlag, currentFeatureFlag);
+            });
+        }
 
         const featureFlagMatchesdInitalValue = () => {
-            return currentFeatureFlag === initalFeatureFlag
+            const featureFlagGetterValue = featureFlag();
+
+            if (typeof featureFlagGetterValue === 'boolean') {
+                return featureFlagGetterValue === initialFeatureFlag;
+            }
+
+            return currentFeatureFlag === initialFeatureFlag
         };
 
         const [ firstLoadChildren, secondLoadChildren ] = this.getLoadChildrens(featureFlag$, featureFlagMatchesdInitalValue, loadChildren, alternativeLoadChildren);

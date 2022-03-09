@@ -3,16 +3,14 @@ import { Injectable } from '@angular/core';
 import { delay, distinctUntilChanged, map, merge, Observable, shareReplay, Subject, tap } from 'rxjs';
 import { getFeatureFlagValue, setFeatureFlagValue } from '@demo/local-storage';
 
-import { FeatureFlag } from '../config/config.model';
-import { DemoRoute } from './config.model';
+import { FeatureFlag, DemoRoute } from './feature-flag.model';
 
 @Injectable({ providedIn: 'root'})
-export class ConfigService {
+export class FeatureFlagService {
   private overrides: Partial<Record<DemoRoute, Subject<FeatureFlag>>> = {};
   private configApiResponses: Partial<Record<DemoRoute, Observable<FeatureFlag>>> = {};
 
-  constructor(private readonly httpClient: HttpClient) {
-  }
+  constructor(private readonly httpClient: HttpClient) {}
 
   private getOverride(route: DemoRoute): Subject<FeatureFlag> {
     this.overrides[route] = this.overrides[route] ?? new Subject<FeatureFlag>();
@@ -24,7 +22,7 @@ export class ConfigService {
     const url = `https://jsonplaceholder.typicode.com/todos/1?feature_flag=${route}`;
 
     this.configApiResponses[route] = this.configApiResponses[route] ?? this.httpClient.get(url).pipe(
-      delay(3000),
+      delay(10 * 1000),
       map(() => this.getConfigSync(route)),
       tap((featureFlag) => this.setConfig(route, featureFlag)),
       distinctUntilChanged(),

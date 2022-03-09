@@ -4,8 +4,8 @@ import { map } from 'rxjs';
 import { Routes } from '@angular/router';
 import { FeatureFlagRoutes, FeatureFlagRouterModule, FeatureFlagRoutesService } from '@demo/feature-flag-router-module';
 
-import { ConfigService } from '../../services/config/config.service';
-import { DemoRoute, FeatureFlag } from '../../services/config/config.model';
+import { FeatureFlagService } from '../../services/feature-flag/feature-flag.service';
+import { DemoRoute, FeatureFlag } from '../../services/feature-flag/feature-flag.model';
 
 const routes: Routes = [
   {
@@ -22,7 +22,7 @@ const routes: Routes = [
   providedIn: 'root',
 })
 class FeatureFlagRoutesExample implements FeatureFlagRoutesService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private readonly configService: FeatureFlagService) {}
 
   getFeatureRoutes(): FeatureFlagRoutes {
     return [
