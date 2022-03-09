@@ -1,80 +1,49 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { delay, map, merge, Observable, shareReplay, Subject, tap } from 'rxjs';
+import { delay, distinctUntilChanged, map, merge, Observable, shareReplay, Subject, tap } from 'rxjs';
+import { getFeatureFlagValue, setFeatureFlagValue } from '@demo/local-storage';
+
 import { FeatureFlag } from '../config/config.model';
 import { DemoRoute } from './config.model';
 
 @Injectable({ providedIn: 'root'})
 export class ConfigService {
-  /**
-   * @deprecated - Legacy code for developing FeatureFlagRouterModule
-   */
-  overrideA$ = new Subject<FeatureFlag>();
-  /**
-   * @deprecated - Legacy code for developing FeatureFlagRouterModule
-   */
-  configA: FeatureFlag = FeatureFlag.OFF;
-  /**
-   * @deprecated - Legacy code for developing FeatureFlagRouterModule
-   */
-  configA$: Observable<FeatureFlag> = this.getConfigA();
-
-  overrideG$ = new Subject<FeatureFlag>();
-  
-  configG$: Observable<FeatureFlag> = this.getConfigG();
+  private overrides: Partial<Record<DemoRoute, Subject<FeatureFlag>>> = {};
+  private configApiResponses: Partial<Record<DemoRoute, Observable<FeatureFlag>>> = {};
 
   constructor(private readonly httpClient: HttpClient) {
   }
 
-  /**
-   * @deprecated - Legacy code for developing FeatureFlagRouterModule
-   */
-  getConfigA(): Observable<FeatureFlag> {
-    return merge(
-      this.httpClient.get(`https://jsonplaceholder.typicode.com/todos/1?feature_flag=${DemoRoute.A}`).pipe(
-        delay(1000),
-        map(() => this.getMockConfigValue(DemoRoute.A)),
-        shareReplay(1),
-      ),
-      this.overrideA$,
-    ).pipe(tap(config => {
-      this.configA = config;
-    }))
+  private getOverride(route: DemoRoute): Subject<FeatureFlag> {
+    this.overrides[route] = this.overrides[route] ?? new Subject<FeatureFlag>();
+
+    return this.overrides[route]!;
   }
 
-  getConfigG(): Observable<FeatureFlag> {
-    return merge(
-      this.httpClient.get(`https://jsonplaceholder.typicode.com/todos/1?feature_flag=${DemoRoute.G}`).pipe(
-        delay(1000),
-        map(() => this.getMockConfigValue(DemoRoute.G)),
-        shareReplay(1),
-      ),
-      this.overrideG$,
+  getConfig(route: DemoRoute): Observable<FeatureFlag> {
+    const url = `https://jsonplaceholder.typicode.com/todos/1?feature_flag=${route}`;
+
+    this.configApiResponses[route] = this.configApiResponses[route] ?? this.httpClient.get(url).pipe(
+      delay(3000),
+      map(() => this.getConfigSync(route)),
+      tap((featureFlag) => this.setConfig(route, featureFlag)),
+      distinctUntilChanged(),
+      shareReplay(1),
     );
+
+    return merge(
+      this.configApiResponses[route]!,
+      this.getOverride(route),
+    )
   }
 
-  getLocalStorageKey(route: DemoRoute): string {
-    return `feature-flag__${route}`;
+  getConfigSync(route: DemoRoute): FeatureFlag {
+    return getFeatureFlagValue(route);
   }
 
   setConfig(route: DemoRoute, featureFlag: FeatureFlag): void {
-    localStorage.setItem(this.getLocalStorageKey(route), featureFlag || FeatureFlag.OFF);
+    setFeatureFlagValue(route, featureFlag);
 
-    if (route === DemoRoute.A) {
-      this.configA = featureFlag;
-      this.overrideA$.next(featureFlag);
-    } else {
-      this.overrideG$.next(featureFlag);
-    }
-  }
-
-  getMockConfigValue(route: DemoRoute): FeatureFlag {
-    const featureFlag = localStorage.getItem(this.getLocalStorageKey(route));
-    
-    if (featureFlag === FeatureFlag.ON) {
-      return FeatureFlag.ON;
-    }
-
-    return FeatureFlag.OFF;
+    this.getOverride(route).next(featureFlag);
   }
 }

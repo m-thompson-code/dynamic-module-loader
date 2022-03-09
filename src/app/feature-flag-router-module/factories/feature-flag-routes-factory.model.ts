@@ -15,7 +15,6 @@ import { FeatureFlagRoutesFactoryService } from "../services/feature-flag-routes
  * and if `featureFlag`'s latest value is `true`, `alternativeLoadChildren` is used instead.
  */
 export interface FeatureFlagRoute extends Route {
-  featureFlagPath?: string;// TODO:
   /**
    * An object specifying lazy-loaded child routes.
    * 

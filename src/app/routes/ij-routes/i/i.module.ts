@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IComponent } from './i.component';
 import { Routes } from '@angular/router';
-import { FeatureFlagRouterModule } from 'src/app/feature-flag-router/feature-flag-router.module';
+import { FeatureFlagRouterModule } from '@demo/feature-flag-router-module';
+
+import { IComponent } from './i.component';
 
 const routes: Routes = [
   {

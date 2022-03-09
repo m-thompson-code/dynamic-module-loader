@@ -21,7 +21,11 @@
     "lib": [
       "es2020",
       "dom"
-    ]
+    ],
+    "paths": {
+			"@demo/local-storage": ["src/app/local-storage"],
+			"@demo/feature-flag-router-module": ["src/app/feature-flag-router-module"],
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
