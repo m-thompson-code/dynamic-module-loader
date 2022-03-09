@@ -86,7 +86,7 @@ export class FeatureFlagRoutesFactoryService {
 
         const [ firstLoadChildren, secondLoadChildren ] = this.getLoadChildrens(featureFlag$, loadChildren, alternativeLoadChildren);
         const [ firstUrlMatcher, secondUrlMatcher ] = this.getUrlMatchers(featureFlagLatestValuesMatchInitalValue, featureFlagRoute.matcher);
-            console.log(featureFlagRoute);
+
         return [
             {
                 ...featureFlagRoute,

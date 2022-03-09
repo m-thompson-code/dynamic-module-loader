@@ -10,7 +10,6 @@ import { Route, UrlMatchResult, UrlSegment, UrlSegmentGroup } from "@angular/rou
  */
 export function defaultUrlMatcher(
     segments: UrlSegment[], segmentGroup: UrlSegmentGroup, route: Route): UrlMatchResult|null {
-      console.log(segments, segmentGroup, route);
   const parts = splitRoutePath(route);//route.path!.split('/');
 
   if (parts.length > segments.length) {
