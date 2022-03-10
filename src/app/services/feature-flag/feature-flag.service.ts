@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { delay, distinctUntilChanged, map, merge, Observable, shareReplay, Subject, tap } from 'rxjs';
-import { getFeatureFlagValue, setFeatureFlagValue, FeatureFlag, DemoRoute } from '@demo/storage';
+import { getFeatureFlagValue, setFeatureFlagValue, FeatureFlag, DemoRoute } from 'demo-storage';
 
 @Injectable({ providedIn: 'root'})
 export class FeatureFlagService {
