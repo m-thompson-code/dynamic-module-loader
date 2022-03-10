@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes } from '@angular/router';
-import { FeatureFlagRouterModule } from 'temp-temp-flag-router';
+import { FeatureFlagRouterModule } from 'feature-flag-router';
 
 import { IFeatureComponent } from './i-feature.component';
 

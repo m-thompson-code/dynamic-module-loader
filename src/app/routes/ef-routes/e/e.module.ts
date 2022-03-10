@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FeatureFlagRouterModule, FeatureFlagRoutes } from 'temp-temp-flag-router';
+import { FeatureFlagRouterModule, FeatureFlagRoutes } from 'feature-flag-router';
 
 import { EComponent } from './e.component';
 

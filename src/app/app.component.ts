@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { FeatureFlag, DemoRoute } from '@ng-moo/storage';
+import { FeatureFlag, DemoRoute } from '@demo/storage';
 import { Subject } from 'rxjs';
 import { FeatureFlagService } from './services/feature-flag/feature-flag.service';
 
