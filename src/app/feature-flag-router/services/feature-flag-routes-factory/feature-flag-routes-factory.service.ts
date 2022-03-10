@@ -20,8 +20,8 @@ export class FeatureFlagRoutesFactoryService {
         alternativeFeatureChildren: LoadChildrenCallback,
     ): [() => Observable<Type<unknown>> , () => Observable<Type<unknown>> ] {
         const featureFlag$: Observable<boolean> = wrapIntoObservable(featureFlag);
-        const module$: Observable<Type<unknown>> = wrapIntoObservable(loadChildren());
-        const alternativeModule$: Observable<Type<unknown>> = wrapIntoObservable(alternativeFeatureChildren());
+        const module: () => Observable<Type<unknown>> = () => wrapIntoObservable(loadChildren());
+        const alternativeModule: () => Observable<Type<unknown>> = () => wrapIntoObservable(alternativeFeatureChildren());
 
         let alternativeModuleIsUnsafe = false;
 
@@ -36,19 +36,19 @@ export class FeatureFlagRoutesFactoryService {
                 }
 
                 if (alternativeModuleIsUnsafe) {
-                    return module$;
+                    return module();
                 }
 
                 if (value === shouldLoadAlternative) {
-                    return alternativeModule$;
+                    return alternativeModule();
                 }
                     
-                return module$;
+                return module();
             }),
             catchError(error => {
                 console.error(error);
                 alternativeModuleIsUnsafe = true;
-                return module$;
+                return module();
             })
         );
 
@@ -90,7 +90,6 @@ export class FeatureFlagRoutesFactoryService {
             ).subscribe(value => {
                 initialFeatureFlag ??= value;
                 currentFeatureFlag = value;
-                console.log(initialFeatureFlag, currentFeatureFlag);
             });
         }
 
