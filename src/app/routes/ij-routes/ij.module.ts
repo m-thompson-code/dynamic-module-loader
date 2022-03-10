@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FeatureFlagRouterModule, FeatureFlagRoutes } from '@ng-moo/feature-flag-router';
+import { FeatureFlagRouterModule, FeatureFlagRoutes } from 'temp-temp-flag-router';
 
 (window as any).test = () => { (window as any).featureFlag = !(window as any).featureFlag };
 
