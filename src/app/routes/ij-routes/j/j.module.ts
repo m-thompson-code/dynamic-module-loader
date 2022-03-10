@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes } from '@angular/router';
-import { FeatureFlagRouterModule } from '@demo/feature-flag-router-module';
+import { FeatureFlagRouterModule } from '@ng-moo/feature-flag-router';
 
 import { JComponent } from './j.component';
 

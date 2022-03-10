@@ -7,7 +7,7 @@ import { FeatureFlagRoutes } from "../../factories/feature-flag-routes-factory.m
  * 
  * These `ROUTES` can use a Feature Flag to determine which NgModule to lazy load when navigating to a path
  */
- export abstract class FeatureFlagRoutesService {
+export abstract class FeatureFlagRoutesService {
     /**
      * `getFeatureRoutes` is expected to return an Array of `FeatureFlagRoute` or `Route` (`NotFeatureFlagRoute`)
      * 

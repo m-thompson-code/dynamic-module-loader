@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { delay, distinctUntilChanged, map, merge, Observable, shareReplay, Subject, tap } from 'rxjs';
-import { getFeatureFlagValue, setFeatureFlagValue } from '@demo/local-storage';
-
-import { FeatureFlag, DemoRoute } from './feature-flag.model';
+import { getFeatureFlagValue, setFeatureFlagValue, FeatureFlag, DemoRoute } from '@ng-moo/storage';
 
 @Injectable({ providedIn: 'root'})
 export class FeatureFlagService {

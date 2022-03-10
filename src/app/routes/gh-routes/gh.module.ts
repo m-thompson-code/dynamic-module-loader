@@ -2,10 +2,10 @@ import { Injectable, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { map } from 'rxjs';
 import { Routes } from '@angular/router';
-import { FeatureFlagRoutes, FeatureFlagRouterModule, FeatureFlagRoutesService } from '@demo/feature-flag-router-module';
+import { FeatureFlagRoutes, FeatureFlagRouterModule, FeatureFlagRoutesService } from '@ng-moo/feature-flag-router';
+import { DemoRoute, FeatureFlag } from '@ng-moo/storage';
 
 import { FeatureFlagService } from '../../services/feature-flag/feature-flag.service';
-import { DemoRoute, FeatureFlag } from '../../services/feature-flag/feature-flag.model';
 
 const routes: Routes = [
   {

@@ -1,4 +1,4 @@
-import { NgModule, OnDestroy, OnInit } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { AComponent } from './a.component';
@@ -17,17 +17,4 @@ const routes: Routes = [
     RouterModule.forChild(routes),
   ],
 })
-export class AModule implements OnInit, OnDestroy {
-  constructor() {
-    console.log("AModule constructor");
-    console.log(this);
-  }
-
-  ngOnInit(): void {
-    console.log("AModule ngOnInit");
-  }
-
-  ngOnDestroy(): void {
-    console.log("AModule onDestroy");
-  }
-}
+export class AModule { }

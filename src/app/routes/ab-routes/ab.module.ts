@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FeatureFlagRoutes, FeatureFlagRouterModule } from '@demo/feature-flag-router-module';
-import { getFeatureFlagValue } from '@demo/local-storage';
-import { DemoRoute, FeatureFlag } from 'src/app/services/feature-flag/feature-flag.model';
+import { FeatureFlagRoutes, FeatureFlagRouterModule } from '@ng-moo/feature-flag-router';
+import { getFeatureFlagValue, FeatureFlag, DemoRoute } from '@ng-moo/storage';
 
 const routes: FeatureFlagRoutes = [
   {

@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { FeatureFlag, DemoRoute } from '@ng-moo/storage';
 import { Subject } from 'rxjs';
-import { DemoRoute, FeatureFlag } from './services/feature-flag/feature-flag.model';
 import { FeatureFlagService } from './services/feature-flag/feature-flag.service';
 
 @Component({
