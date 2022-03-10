@@ -23,8 +23,8 @@
       "dom"
     ],
     "paths": {
-			"@demo/storage": ["src/app/storage"],
-			"feature-flag-router": ["node_modules/temp-temp-flag-router"],
+			"demo-storage": ["src/app/storage"],
+			"ng-feature-flag-router": ["node_modules/temp-temp-flag-router"],
     }
   },
   "angularCompilerOptions": {
